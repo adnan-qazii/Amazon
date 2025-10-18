@@ -1,9 +1,7 @@
 from ..extensions import db
 from ..models import Order, OrderItem, CartItem
 
-# ----------------------------
-# Order functions
-# ----------------------------
+
 
 def checkout_cart(user_id):
     cart_items = CartItem.query.filter_by(user_id=user_id).all()

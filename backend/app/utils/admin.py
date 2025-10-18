@@ -1,5 +1,5 @@
-from models import User, Order, Product
-from extensions import db
+from ..models import User, Order, Product
+from ..extensions import db
 
 # ----------------------------
 # Admin Helper Functions
@@ -9,9 +9,11 @@ def get_all_users():
     """Return all registered users"""
     return User.query.all()
 
+
 def get_all_orders():
     """Return all orders in the system"""
     return Order.query.all()
+
 
 def get_admin_stats():
     """Return summary analytics"""

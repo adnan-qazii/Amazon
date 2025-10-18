@@ -10,9 +10,11 @@ def get_user_by_email(email):
     """Return user object by email or None"""
     return User.query.filter_by(email=email).first()
 
+
 def get_user_by_username(username):
     """Return user object by username or None"""
     return User.query.filter_by(username=username).first()
+
 
 def create_user(username, email, password):
     """Create a new user with hashed password"""

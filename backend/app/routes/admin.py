@@ -3,48 +3,9 @@ from ..utils.product import create_product, get_product_by_id, update_product, d
 from ..utils.decorators import token_required
 from ..models.product import Product
 from ..utils.decorators import admin_required
-from utils.admin import get_all_users, get_all_orders, get_admin_stats
+from ..utils.admin import get_all_users, get_all_orders, get_admin_stats
 
 admin_bp = Blueprint("admin", __name__)
-
-# ----------------------------
-# Public Routes
-# ----------------------------
-
-@admin_bp.route("/products", methods=["GET"])
-def list_products():
-    products = Product.query.all()
-    result = []
-    for p in products:
-        result.append({
-            "id": p.id,
-            "name": p.name,
-            "description": p.description,
-            "price": p.price,
-            "stock": p.stock,
-            "created_at": p.created_at,
-            "updated_at": p.updated_at
-        })
-    return jsonify(result), 200
-
-@admin_bp.route("/products/<int:product_id>", methods=["GET"])
-def get_product(product_id):
-    product = get_product_by_id(product_id)
-    if not product:
-        return {"error": "Product not found"}, 404
-    return {
-        "id": product.id,
-        "name": product.name,
-        "description": product.description,
-        "price": product.price,
-        "stock": product.stock,
-        "created_at": product.created_at,
-        "updated_at": product.updated_at
-    }, 200
-
-# ----------------------------
-# Admin Routes (protected)
-# ----------------------------
 
 @admin_bp.route("/products", methods=["POST"])
 @token_required
@@ -128,6 +89,7 @@ def get_orders(current_user):
             "created_at": o.created_at
         })
     return jsonify(result), 200
+
 
 
 @admin_bp.route("/admin/stats", methods=["GET"])
