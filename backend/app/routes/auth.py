@@ -4,6 +4,10 @@ from ..utils.user import get_user_by_email, get_user_by_username, create_user, v
 
 auth_bp = Blueprint("auth", __name__)
 
+
+
+
+
 @auth_bp.route("/register", methods=["POST"])
 def register():
     data = request.get_json()
@@ -20,6 +24,9 @@ def register():
     create_user(username, email, password)
     return {"message": "User registered successfully"}, 201
 
+
+
+
 @auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.get_json()
@@ -35,6 +42,9 @@ def login():
 
     token = generate_jwt(user.id)
     return {"token": token}, 200
+
+
+
 
 @auth_bp.route("/profile", methods=["GET"])
 @token_required

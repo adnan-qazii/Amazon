@@ -5,6 +5,9 @@ from ..utils.cart import add_to_cart, remove_from_cart, get_cart_items
 cart_bp = Blueprint("cart", __name__)
 
 
+
+
+
 @cart_bp.route("/cart", methods=["GET"])
 @token_required
 def view_cart(current_user):
@@ -19,6 +22,9 @@ def view_cart(current_user):
         })
     return jsonify(result), 200
 
+
+
+
 @cart_bp.route("/cart", methods=["POST"])
 @token_required
 def add_cart_item(current_user):
@@ -29,6 +35,10 @@ def add_cart_item(current_user):
         return {"error": "Product ID is required"}, 400
     item = add_to_cart(current_user.id, product_id, quantity)
     return {"message": "Added to cart", "product_id": item.product_id, "quantity": item.quantity}, 201
+
+
+
+
 
 @cart_bp.route("/cart/<int:product_id>", methods=["DELETE"])
 @token_required

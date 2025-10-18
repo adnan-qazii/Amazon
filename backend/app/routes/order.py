@@ -4,6 +4,9 @@ from ..utils.order import checkout_cart, get_user_orders
 
 order_bp = Blueprint("order", __name__)
 
+
+
+
 @order_bp.route("/checkout", methods=["POST"])
 @token_required
 def checkout(current_user):
@@ -11,6 +14,9 @@ def checkout(current_user):
     if error:
         return {"error": error}, 400
     return {"message": "Order placed successfully", "order_id": order.id}, 201
+
+
+
 
 @order_bp.route("/orders", methods=["GET"])
 @token_required
