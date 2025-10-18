@@ -5,9 +5,6 @@ import jwt
 from datetime import datetime, timedelta
 from flask import current_app
 
-# ----------------------------
-# User helper functions
-# ----------------------------
 
 def get_user_by_email(email):
     """Return user object by email or None"""
