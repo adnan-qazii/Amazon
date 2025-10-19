@@ -7,10 +7,12 @@ from .routes.cart import cart_bp
 from .routes.wishlist import wishlist_bp    
 from .routes.order import order_bp
 from .routes.admin import admin_bp
+from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
+    CORS(app)
 
     db.init_app(app)
     migrate.init_app(app, db)

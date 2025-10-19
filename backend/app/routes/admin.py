@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from ..utils.product import create_product, get_product_by_id, update_product, delete_product
+from ..utils.product import create_product, get_product_by_id, update_product, delete_product, save_product_image
 from ..utils.decorators import token_required
 from ..models.product import Product
 from ..utils.decorators import admin_required
@@ -11,16 +11,36 @@ admin_bp = Blueprint("admin", __name__)
 @token_required
 @admin_required
 def create_product_route(current_user):
-    data = request.get_json()
-    name = data.get("name")
-    description = data.get("description")
-    price = data.get("price")
-    stock = data.get("stock")
+    # Check if request contains files (multipart/form-data)
+    if 'image' in request.files:
+        # Form data with file upload
+        name = request.form.get("name")
+        description = request.form.get("description")
+        price = request.form.get("price")
+        stock = request.form.get("stock")
+        image_file = request.files.get("image")
+        
+        # Save image
+        image_filename = save_product_image(image_file) if image_file else None
+    else:
+        # JSON data without file
+        data = request.get_json()
+        name = data.get("name")
+        description = data.get("description")
+        price = data.get("price")
+        stock = data.get("stock")
+        image_filename = None
 
     if not name or price is None or stock is None:
         return {"error": "Name, price, and stock are required"}, 400
 
-    product = create_product(name, description, price, stock)
+    try:
+        price = float(price)
+        stock = int(stock)
+    except ValueError:
+        return {"error": "Invalid price or stock value"}, 400
+
+    product = create_product(name, description, price, stock, image=image_filename)
     return {"message": "Product created", "id": product.id}, 201
 
 
@@ -33,12 +53,45 @@ def update_product_route(current_user, product_id):
     if not product:
         return {"error": "Product not found"}, 404
 
-    data = request.get_json()
+    # Check if request contains files (multipart/form-data)
+    if 'image' in request.files:
+        # Form data with file upload
+        name = request.form.get("name")
+        description = request.form.get("description")
+        price = request.form.get("price")
+        stock = request.form.get("stock")
+        image_file = request.files.get("image")
+        
+        # Save new image
+        image_filename = save_product_image(image_file) if image_file else None
+    else:
+        # JSON data without file
+        data = request.get_json()
+        name = data.get("name")
+        description = data.get("description")
+        price = data.get("price")
+        stock = data.get("stock")
+        image_filename = None
+
+    # Convert types if provided
+    if price is not None:
+        try:
+            price = float(price)
+        except ValueError:
+            return {"error": "Invalid price value"}, 400
+    
+    if stock is not None:
+        try:
+            stock = int(stock)
+        except ValueError:
+            return {"error": "Invalid stock value"}, 400
+
     product = update_product(product,
-    name=data.get("name"),
-    description=data.get("description"),
-    price=data.get("price"),
-    stock=data.get("stock"))
+        name=name,
+        description=description,
+        price=price,
+        stock=stock,
+        image=image_filename)
     return {"message": "Product updated"}, 200
 
 

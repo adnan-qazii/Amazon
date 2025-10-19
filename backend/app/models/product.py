@@ -11,6 +11,7 @@ class Product(db.Model):
     stock = db.Column(db.Integer, nullable=False, default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    image = db.Column(db.String(255), nullable=True)
 
     def __repr__(self):
         return f"<Product {self.name}>"
