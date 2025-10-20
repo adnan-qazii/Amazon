@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify
 from ..utils.product import create_product, get_product_by_id, update_product, delete_product, save_product_image
-from ..utils.decorators import token_required
 from ..models.product import Product
 from ..utils.decorators import admin_required
 from ..utils.admin import get_all_users, get_all_orders, get_admin_stats
@@ -8,7 +7,6 @@ from ..utils.admin import get_all_users, get_all_orders, get_admin_stats
 admin_bp = Blueprint("admin", __name__)
 
 @admin_bp.route("/products", methods=["POST"])
-@token_required
 @admin_required
 def create_product_route(current_user):
     # Check if request contains files (multipart/form-data)
@@ -46,7 +44,6 @@ def create_product_route(current_user):
 
 
 @admin_bp.route("/products/<int:product_id>", methods=["PUT"])
-@token_required
 @admin_required
 def update_product_route(current_user, product_id):
     product = get_product_by_id(product_id)
@@ -98,7 +95,6 @@ def update_product_route(current_user, product_id):
 
 
 @admin_bp.route("/products/<int:product_id>", methods=["DELETE"])
-@token_required
 @admin_required
 def delete_product_route(current_user, product_id):
     product = get_product_by_id(product_id)
@@ -110,8 +106,7 @@ def delete_product_route(current_user, product_id):
 
 
 
-@admin_bp.route("/admin/users", methods=["GET"])
-@token_required
+@admin_bp.route("/users", methods=["GET"])
 @admin_required
 def get_users(current_user):
     users = get_all_users()
@@ -127,8 +122,7 @@ def get_users(current_user):
     return jsonify(result), 200
 
 
-@admin_bp.route("/admin/orders", methods=["GET"])
-@token_required
+@admin_bp.route("/orders", methods=["GET"])
 @admin_required
 def get_orders(current_user):
     orders = get_all_orders()
@@ -145,8 +139,7 @@ def get_orders(current_user):
 
 
 
-@admin_bp.route("/admin/stats", methods=["GET"])
-@token_required
+@admin_bp.route("/stats", methods=["GET"])
 @admin_required
 def get_stats(current_user):
     stats = get_admin_stats()

@@ -1,9 +1,8 @@
-from flask import Blueprint, request, jsonify, url_for, send_from_directory, current_app
-from ..utils.product import create_product, get_product_by_id, update_product, delete_product, save_product_image
-from ..utils.decorators import token_required
+from flask import Blueprint, jsonify, url_for, send_from_directory, current_app
+from ..utils.product import  get_product_by_id
+
 from ..models.product import Product
-from ..utils.decorators import admin_required
-import os
+
 
 product_bp = Blueprint("product", __name__)
 
